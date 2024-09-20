@@ -22,7 +22,24 @@ app.get("/", (req,res)=>{
 })
 
 io.on("connection", function(uniquesocket){
-    console.log("connected")
+    console.log("connected");
+
+    // uniquesocket.on("churan", function(){
+    //     io.emit("churan paapdi")
+    // })
+    // uniquesocket.on("disconnect", function(){
+    //     console.log("disconnected")
+    // })
+
+    if(!players.white){
+        players.white=uniquesocket.id;
+        uniquesocket.emit("playerRole", "w");
+    } else if(!players.black){
+        players.black=uniquesocket.id;
+        uniquesocket.emit("playerRole", "b");
+    } else {
+        uniquesocket.emit("spectatorRole");
+    }
 })
 
 server.listen(3000, function(){
