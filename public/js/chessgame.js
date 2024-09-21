@@ -24,7 +24,7 @@ const renderBoard = () =>{
                     square.color==="w"?"white":"black"
                 );
                 pieceElement.innerText=getPieceUnicode(square);
-                pieceElement.draggable=playerRole===square;
+                pieceElement.draggable=playerRole===square.color;
 
                 pieceElement.addEventListener("dragstart", (e)=>{
                     if(pieceElement.draggable){
@@ -44,7 +44,7 @@ const renderBoard = () =>{
 
             squareElement.addEventListener("dragover", (e) => {
                 e.preventDefault();
-            })
+            });
 
             squareElement.addEventListener("drop", function(e){
                 e.preventDefault();
@@ -66,7 +66,7 @@ const renderBoard = () =>{
     } else{
         boardElement.classList.remove("flipped");
     }
-}
+};
 
 const handleMove = (source, target) => {
     const move = {
