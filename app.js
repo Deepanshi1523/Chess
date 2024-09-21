@@ -40,6 +40,34 @@ io.on("connection", function(uniquesocket){
     } else {
         uniquesocket.emit("spectatorRole");
     }
+
+    uniquesocket.on("disconnect", function(){
+        if(uniquesocket.id===players.white){
+            delete players.white;
+        } else if(uniquesocket.id===players.black){
+            delete players.black;
+        }
+    });
+
+    uniquesocket.on("move", (move)=>{
+        try{
+            if(chess.turn()==="w" && uniquesocket.id!==players.white) return;
+            if(chess.turn()==="b" && uniquesocket.id!==players.black) return;
+
+            const result = chess.move(move);
+            if(result){
+                currentPlayer=chess.turn();
+                io.emit("move",move);
+                io.emit("boardState", chess.fen());
+            } else{
+                console.log("invalid move: ", move);
+                uniquesocket.emit("invalid move", move);
+            }
+        } catch(err) {
+            console.log(err);
+            uniquesocket.emit("invalid move: ", move);
+        }
+    })
 })
 
 server.listen(3000, function(){
